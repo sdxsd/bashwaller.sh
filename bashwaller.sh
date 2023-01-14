@@ -5,17 +5,14 @@ GNOME="GNOME"
 DARWIN="Darwin"
 FULL_PATH=""
 
+# GNOME
 change_wallpaper_GNOME () {
 	gsettings set org.gnome.desktop.background picture-uri file://$FULL_PATH
 	gsettings set org.gnome.desktop.background picture-uri-dark file://$FULL_PATH
 }
 
-change_wallpaper_aqua () {
-	CMD="'tell application \"Finder\" to set desktop picture to POSIX file \"$FULL_PATH\"'"
-	zsh -c "osascript -e $CMD"
-}
-
-change_wallpaper_xfce4 () {
+# XFCE4
+change_wallpaper_Xfwm4 () {
 	LIST=($(xfconf-query -c xfce4-desktop -l | \
 		grep "monitor" | grep "last-image"))
 	for MONITOR in "${LIST[@]}"
@@ -24,13 +21,19 @@ change_wallpaper_xfce4 () {
 	done
 }
 
+# MacOS
+change_wallpaper_aqua () {
+	CMD="'tell application \"Finder\" to set desktop picture to POSIX file \"$FULL_PATH\"'"
+	zsh -c "osascript -e $CMD"
+}
+
 determine_wm_and_change_wallpaper () {
 	if [ $(uname) = "Linux" ]
 	then
 		WINDOW_MANAGER=$(wmctrl -m | grep "Name: " | awk '{print $2}')
 		if [ $WINDOW_MANAGER = $XFWM ]
 		then
-			change_wallpaper_xfce4
+			change_wallpaper_Xfwm4
 		fi
 		if [ $WINDOW_MANAGER = $GNOME ]
 		then
