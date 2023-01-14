@@ -6,7 +6,8 @@ DARWIN="Darwin"
 FULL_PATH=""
 
 change_wallpaper_aqua () {
-	osascript -e "tell application "Finder" to set desktop picture to POSIX file $FULL_PATH"
+	CMD="'tell application \"Finder\" to set desktop picture to POSIX file \"$FULL_PATH\"'"
+	zsh -c "osascript -e $CMD"
 }
 
 change_wallpaper_xfce4 () {
