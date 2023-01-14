@@ -5,6 +5,11 @@ GNOME="GNOME"
 DARWIN="Darwin"
 FULL_PATH=""
 
+change_wallpaper_GNOME () {
+	gsettings set org.gnome.desktop.background picture-uri file://$FULL_PATH
+	gsettings set org.gnome.desktop.background picture-uri-dark file://$FULL_PATH
+}
+
 change_wallpaper_aqua () {
 	CMD="'tell application \"Finder\" to set desktop picture to POSIX file \"$FULL_PATH\"'"
 	zsh -c "osascript -e $CMD"
@@ -19,14 +24,18 @@ change_wallpaper_xfce4 () {
 	done
 }
 
-determine_wm () {
+determine_wm_and_change_wallpaper () {
 	if [ $(uname) = "Linux" ]
 	then
 		WINDOW_MANAGER=$(wmctrl -m | grep "Name: " | awk '{print $2}')
 		if [ $WINDOW_MANAGER = $XFWM ]
 		then
 			change_wallpaper_xfce4
-		else 
+		fi
+		if [ $WINDOW_MANAGER = $GNOME ]
+		then
+			change_wallpaper_GNOME
+		else
 			feh --bg-fill $FULL_PATH
 		fi
 	fi
@@ -41,7 +50,7 @@ change_wallpaper () {
 	PAPE=$(ls $WALLPATH | shuf -n1)
 	FULL_PATH="$WALLPATH/$PAPE"
 	echo $FULL_PATH
-	determine_wm
+	determine_wm_and_change_wallpaper
 }
 
 change_wallpaper
