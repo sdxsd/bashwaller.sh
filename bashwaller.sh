@@ -3,7 +3,12 @@
 XFWM="Xfwm4"
 GNOME="GNOME"
 DARWIN="Darwin"
+KDE="KWin"
 FULL_PATH=""
+
+change_wallpaper_KDE () {
+	plasma-apply-wallpaperimage $FULL_PATH
+}
 
 # GNOME
 change_wallpaper_GNOME () {
@@ -38,6 +43,10 @@ determine_wm_and_change_wallpaper () {
 		if [ $WINDOW_MANAGER = $GNOME ]
 		then
 			change_wallpaper_GNOME
+		fi
+		if [ $WINDOW_MANAGER = $KDE ]
+		then
+			change_wallpaper_KDE
 		else
 			feh --bg-fill $FULL_PATH
 		fi
